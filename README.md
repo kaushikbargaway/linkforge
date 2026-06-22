@@ -107,6 +107,6 @@ dto/
 
 ## Author
 
-Kaushik Kumar
-B.E. Information Science & Engineering
+Kaushik Kumar<br>
+B.E. Information Science & Engineering<br>
 BNM Institute of Technology
