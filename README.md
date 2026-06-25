@@ -153,8 +153,6 @@ Currently, attempting to create an existing custom alias returns an HTTP **500 I
 
 ## Author
 
-**Kaushik Kumar**
-
-B.E. Information Science & Engineering<br>
-
+Kaushik Kumar
+B.E. Information Science & Engineering
 BNM Institute of Technology
