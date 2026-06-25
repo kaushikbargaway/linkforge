@@ -23,7 +23,7 @@ public class UrlController {
     public ResponseEntity<?> shorten(@RequestBody UrlRequest request) {
 
         String shortCode =
-                service.createShortUrl(request.getUrl());
+                service.createShortUrl(request.getUrl(), request.getCustomAlias());
 
         return ResponseEntity.ok(
                 Map.of(

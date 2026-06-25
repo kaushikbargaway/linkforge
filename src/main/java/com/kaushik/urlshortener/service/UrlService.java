@@ -15,11 +15,27 @@ public class UrlService {
         this.repository = repository;
     }
 
-    public String createShortUrl(String originalUrl) {
+    public String createShortUrl(String originalUrl, String customAlias) {
 
-        String shortCode = UUID.randomUUID()
-                .toString()
-                .substring(0, 6);
+        String shortCode;
+
+        if (customAlias != null && !customAlias.isBlank()) {
+
+            if (repository.existsByShortCode(customAlias)) {
+                throw new RuntimeException("Alias already exists");
+            }
+
+            shortCode = customAlias;
+
+        } else {
+
+            do {
+                shortCode = UUID.randomUUID()
+                    .toString()
+                    .substring(0, 6);
+            } while (repository.existsByShortCode(shortCode));
+
+        }
 
         Url url = new Url();
         url.setOriginalUrl(originalUrl);
