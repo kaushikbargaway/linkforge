@@ -5,7 +5,9 @@ import com.kaushik.urlshortener.repository.UrlRepository;
 import org.springframework.stereotype.Service;
 import com.kaushik.urlshortener.exception.AliasAlreadyExistsException;
 import com.kaushik.urlshortener.exception.UrlNotFoundException;
+import com.kaushik.urlshortener.exception.UrlExpiredException;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -17,7 +19,9 @@ public class UrlService {
         this.repository = repository;
     }
 
-    public String createShortUrl(String originalUrl, String customAlias) {
+    public String createShortUrl(String originalUrl,
+                             String customAlias,
+                             LocalDateTime expiryDate) {
 
         String shortCode;
 
@@ -27,21 +31,25 @@ public class UrlService {
                 throw new AliasAlreadyExistsException("Alias already exists");
             }
 
-            shortCode = customAlias;
+        shortCode = customAlias;
 
         } else {
 
             do {
                 shortCode = UUID.randomUUID()
-                    .toString()
-                    .substring(0, 6);
+                        .toString()
+                        .substring(0, 6);
             } while (repository.existsByShortCode(shortCode));
 
         }
 
         Url url = new Url();
+
         url.setOriginalUrl(originalUrl);
         url.setShortCode(shortCode);
+
+        // NEW
+        url.setExpiryDate(expiryDate);
 
         repository.save(url);
 
@@ -51,7 +59,14 @@ public class UrlService {
     public Url getOriginalUrl(String shortCode) {
 
         Url url = repository.findByShortCode(shortCode)
-                .orElseThrow(() -> new UrlNotFoundException("URL not found"));
+                .orElseThrow(() ->
+                        new UrlNotFoundException("URL not found"));
+
+        if (url.getExpiryDate() != null &&
+                LocalDateTime.now().isAfter(url.getExpiryDate())) {
+
+            throw new UrlExpiredException("URL has expired");
+        }
 
         url.setClickCount(url.getClickCount() + 1);
 

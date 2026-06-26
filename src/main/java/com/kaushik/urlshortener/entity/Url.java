@@ -24,4 +24,8 @@ public class Url {
     private Long clickCount = 0L;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    // URL expiration
+    private LocalDateTime expiryDate;
+
 }

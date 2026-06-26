@@ -1,11 +1,12 @@
 # LinkForge – URL Shortening & Analytics Platform
 
-LinkForge is a backend URL shortening and analytics platform built using Java, Spring Boot, MySQL, Spring Data JPA, and Hibernate. It provides URL shortening, custom aliases, click analytics, standardized error handling, and RESTful APIs using a layered architecture.
+LinkForge is a backend URL shortening and analytics platform built using Java, Spring Boot, MySQL, Spring Data JPA, and Hibernate. It provides URL shortening, custom aliases, URL expiration, click analytics, standardized error handling, and RESTful APIs using a layered architecture.
 
 ## Features
 
 * Generate short URLs from long URLs
 * Create custom aliases for shortened URLs
+* Set optional expiration dates for shortened URLs
 * Redirect users using shortened URLs
 * Store URLs in a MySQL database
 * Track click counts for every shortened URL
@@ -48,6 +49,16 @@ LinkForge is a backend URL shortening and analytics platform built using Java, S
 }
 ```
 
+#### Request (URL Expiration)
+
+```json
+{
+  "url": "https://leetcode.com",
+  "customAlias": "leetcode",
+  "expiryDate": "2026-12-31T23:59:59"
+}
+```
+
 #### Success Response
 
 ```json
@@ -82,9 +93,9 @@ http://localhost:8080/api/stats/leetcode
 
 ---
 
-### Error Response Example
+### Error Response Examples
 
-Duplicate Alias
+#### Duplicate Alias
 
 ```http
 HTTP/1.1 409 Conflict
@@ -99,7 +110,7 @@ HTTP/1.1 409 Conflict
 }
 ```
 
-URL Not Found
+#### URL Not Found
 
 ```http
 HTTP/1.1 404 Not Found
@@ -111,6 +122,21 @@ HTTP/1.1 404 Not Found
   "status": 404,
   "error": "Not Found",
   "message": "URL not found"
+}
+```
+
+#### URL Expired
+
+```http
+HTTP/1.1 410 Gone
+```
+
+```json
+{
+  "timestamp": "2026-06-26T11:30:00",
+  "status": 410,
+  "error": "Gone",
+  "message": "URL has expired"
 }
 ```
 
@@ -163,10 +189,11 @@ CREATE DATABASE url_shortener;
 
 5. Test the APIs using Postman.
 
-## Current Features (v1.2.0)
+## Current Features (v1.3.0)
 
 * URL Shortening
 * Custom Alias Support
+* URL Expiration
 * URL Redirection
 * Click Tracking
 * Analytics API
@@ -178,7 +205,6 @@ CREATE DATABASE url_shortener;
 
 ## Planned Enhancements
 
-* URL Expiration
 * Dashboard UI
 * User Authentication (Spring Security + JWT)
 * Cloud Deployment
@@ -188,7 +214,5 @@ CREATE DATABASE url_shortener;
 ## Author
 
 **Kaushik Kumar**<br>
-
 B.E. Information Science & Engineering<br>
-
 BNM Institute of Technology

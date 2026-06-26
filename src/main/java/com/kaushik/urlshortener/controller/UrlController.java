@@ -20,17 +20,22 @@ public class UrlController {
     }
 
     @PostMapping("/api/shorten")
-    public ResponseEntity<?> shorten(@RequestBody UrlRequest request) {
+        public ResponseEntity<?> shorten(@RequestBody UrlRequest request) {
 
-        String shortCode =
-                service.createShortUrl(request.getUrl(), request.getCustomAlias());
+                String shortCode = service.createShortUrl(
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "shortUrl",
-                        "http://localhost:8080/" + shortCode
-                )
-        );
+                        request.getUrl(),
+                        request.getCustomAlias(),
+                        request.getExpiryDate()
+
+                );
+
+                return ResponseEntity.ok(
+                        Map.of(
+                                "shortUrl",
+                                "http://localhost:8080/" + shortCode
+                        )
+                );
     }
 
     @GetMapping("/{shortCode}")
