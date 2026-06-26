@@ -1,6 +1,6 @@
 # LinkForge – URL Shortening & Analytics Platform
 
-LinkForge is a backend URL shortening and analytics platform built using Java, Spring Boot, MySQL, Spring Data JPA, and Hibernate. It provides URL shortening, custom aliases, click analytics, and RESTful APIs designed using a layered architecture.
+LinkForge is a backend URL shortening and analytics platform built using Java, Spring Boot, MySQL, Spring Data JPA, and Hibernate. It provides URL shortening, custom aliases, click analytics, standardized error handling, and RESTful APIs using a layered architecture.
 
 ## Features
 
@@ -11,6 +11,7 @@ LinkForge is a backend URL shortening and analytics platform built using Java, S
 * Track click counts for every shortened URL
 * Retrieve analytics for shortened URLs
 * Prevent duplicate custom aliases
+* Global exception handling with standardized API responses
 * RESTful API architecture
 
 ## Tech Stack
@@ -30,7 +31,7 @@ LinkForge is a backend URL shortening and analytics platform built using Java, S
 
 **POST** `/api/shorten`
 
-Request (Random Short Code)
+#### Request (Random Short Code)
 
 ```json
 {
@@ -38,7 +39,7 @@ Request (Random Short Code)
 }
 ```
 
-Request (Custom Alias)
+#### Request (Custom Alias)
 
 ```json
 {
@@ -47,7 +48,7 @@ Request (Custom Alias)
 }
 ```
 
-Response
+#### Success Response
 
 ```json
 {
@@ -61,7 +62,7 @@ Response
 
 **GET** `/{shortCode}`
 
-Example
+Example:
 
 ```text
 http://localhost:8080/leetcode
@@ -73,10 +74,44 @@ http://localhost:8080/leetcode
 
 **GET** `/api/stats/{shortCode}`
 
-Example
+Example:
 
 ```text
 http://localhost:8080/api/stats/leetcode
+```
+
+---
+
+### Error Response Example
+
+Duplicate Alias
+
+```http
+HTTP/1.1 409 Conflict
+```
+
+```json
+{
+  "timestamp": "2026-06-26T11:15:30",
+  "status": 409,
+  "error": "Conflict",
+  "message": "Alias already exists"
+}
+```
+
+URL Not Found
+
+```http
+HTTP/1.1 404 Not Found
+```
+
+```json
+{
+  "timestamp": "2026-06-26T11:20:00",
+  "status": 404,
+  "error": "Not Found",
+  "message": "URL not found"
+}
 ```
 
 ## Database
@@ -105,6 +140,7 @@ src
             ├── controller
             ├── dto
             ├── entity
+            ├── exception
             ├── repository
             └── service
 ```
@@ -127,7 +163,7 @@ CREATE DATABASE url_shortener;
 
 5. Test the APIs using Postman.
 
-## Current Features (v1.1.0)
+## Current Features (v1.2.0)
 
 * URL Shortening
 * Custom Alias Support
@@ -135,15 +171,13 @@ CREATE DATABASE url_shortener;
 * Click Tracking
 * Analytics API
 * Duplicate Alias Validation
+* Global Exception Handling
+* Custom Exception Classes
+* Standardized Error Responses
 * MySQL Persistence
-
-## Known Limitation
-
-Currently, attempting to create an existing custom alias returns an HTTP **500 Internal Server Error** because global exception handling has not yet been implemented. This will be addressed in **v1.2.0**.
 
 ## Planned Enhancements
 
-* Global Exception Handling
 * URL Expiration
 * Dashboard UI
 * User Authentication (Spring Security + JWT)
@@ -154,5 +188,7 @@ Currently, attempting to create an existing custom alias returns an HTTP **500 I
 ## Author
 
 **Kaushik Kumar**<br>
+
 B.E. Information Science & Engineering<br>
+
 BNM Institute of Technology

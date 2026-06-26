@@ -3,6 +3,8 @@ package com.kaushik.urlshortener.service;
 import com.kaushik.urlshortener.entity.Url;
 import com.kaushik.urlshortener.repository.UrlRepository;
 import org.springframework.stereotype.Service;
+import com.kaushik.urlshortener.exception.AliasAlreadyExistsException;
+import com.kaushik.urlshortener.exception.UrlNotFoundException;
 
 import java.util.UUID;
 
@@ -22,7 +24,7 @@ public class UrlService {
         if (customAlias != null && !customAlias.isBlank()) {
 
             if (repository.existsByShortCode(customAlias)) {
-                throw new RuntimeException("Alias already exists");
+                throw new AliasAlreadyExistsException("Alias already exists");
             }
 
             shortCode = customAlias;
@@ -49,7 +51,7 @@ public class UrlService {
     public Url getOriginalUrl(String shortCode) {
 
         Url url = repository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("URL not found"));
+                .orElseThrow(() -> new UrlNotFoundException("URL not found"));
 
         url.setClickCount(url.getClickCount() + 1);
 
@@ -61,6 +63,6 @@ public class UrlService {
     public Url getStats(String shortCode) {
 
         return repository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("URL not found"));
+                .orElseThrow(() -> new UrlNotFoundException("URL not found"));
     }
 }
